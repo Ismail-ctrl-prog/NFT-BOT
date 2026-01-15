@@ -193,9 +193,22 @@ def main():
     # State to avoid double execution in the same window
     last_run_window = None # (day, window_index)
 
+    # Determine exit time: 13:00 + 15 minutes = 13:15
+    start_date = get_ast_time().date()
+
     while True:
         now_ast = get_ast_time()
         current_day = now_ast.date()
+
+        if current_day > start_date:
+             print("New day detected. Stopping bot as requested (run only for today).")
+             break
+
+        # Check if we are past the last window retry period (13:15)
+        # 13:00 is hour 13, minute 0. + 15 mins = 13:15.
+        if now_ast.hour > 13 or (now_ast.hour == 13 and now_ast.minute >= 16):
+            print("Today's minting windows (12:15 and 13:00 AST) have passed. Exiting.")
+            break
 
         # Check windows
         # Window 1: 12:15

@@ -216,7 +216,9 @@ def main():
             window_id = (current_day, 1)
             if last_run_window != window_id:
                 print(f"Triggering 12:15 PM AST Window at {now_ast}")
-                attempt_mint_window(w3, contract, account)
+                success = attempt_mint_window(w3, contract, account)
+                if success:
+                    print("12:15 PM window successful. Waiting for next window...")
                 last_run_window = window_id
 
         # Window 2: 13:00 (1:00 PM)
@@ -224,7 +226,10 @@ def main():
             window_id = (current_day, 2)
             if last_run_window != window_id:
                 print(f"Triggering 01:00 PM AST Window at {now_ast}")
-                attempt_mint_window(w3, contract, account)
+                success = attempt_mint_window(w3, contract, account)
+                if success:
+                    print("13:00 PM window successful. Exiting for the day.")
+                    break
                 last_run_window = window_id
 
         # Sleep a bit
